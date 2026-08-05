@@ -18,9 +18,9 @@
 
     body {
       min-height: 100vh;
-      /* Main page background using your volcanic render */
-      background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.65)), 
-                  url('bg.png') center/cover fixed no-repeat;
+      /* Fiery Volcanic Background from Unsplash */
+      background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.75)), 
+                  url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1920&auto=format&fit=crop') center/cover fixed no-repeat;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -29,14 +29,14 @@
     }
 
     .container {
-      max-width: 1100px;
+      max-width: 1050px;
       width: 100%;
       display: grid;
       grid-template-columns: 280px 1fr;
       gap: 20px;
     }
 
-    /* Base Card Styling */
+    /* Base Glassmorphic Card Styling */
     .card {
       background: rgba(18, 12, 10, 0.75);
       backdrop-filter: blur(12px);
@@ -67,7 +67,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 45px 20px;
+      padding: 55px 20px;
       text-align: center;
     }
 
@@ -126,18 +126,17 @@
 
     /* Right Grid Area */
     .main-content {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: auto auto;
+      display: flex;
+      flex-direction: column;
       gap: 20px;
     }
 
-    /* Store Banner Card with Dragon Render */
+    /* Store Banner Card */
     .store-card {
-      grid-column: span 2;
-      min-height: 260px;
-      background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.7)), 
-                  url('store-bg.png') center/cover no-repeat;
+      min-height: 240px;
+      /* High-quality fire render image */
+      background: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.75)), 
+                  url('https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=1200&auto=format&fit=crop') center/cover no-repeat;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -178,14 +177,15 @@
       box-shadow: 0 6px 20px rgba(255, 68, 0, 0.6);
     }
 
-    /* Link Creator Card with Lava Spiral Render */
+    /* Link Creator Card */
     .link-creator-card {
-      background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.85)), 
-                  url('link-bg.png') center/cover no-repeat;
+      min-height: 200px;
+      /* High-quality lava / ember graphic */
+      background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.85)), 
+                  url('https://images.unsplash.com/photo-1508739773434-c26b3d09e071?q=80&w=1200&auto=format&fit=crop') center/cover no-repeat;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 210px;
     }
 
     .status-badge {
@@ -209,47 +209,10 @@
       box-shadow: 0 0 8px #ffab00;
     }
 
-    /* How to Join Card */
-    .join-card {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .info-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .info-label {
-      font-size: 0.75rem;
-      font-weight: 800;
-      letter-spacing: 1px;
-      color: #a09995;
-      text-transform: uppercase;
-    }
-
-    .info-input {
-      background: #000000;
-      border: 1px solid rgba(255, 80, 0, 0.4);
-      border-radius: 8px;
-      padding: 12px 16px;
-      font-family: 'Space Mono', monospace;
-      color: #ff9d00;
-      font-weight: 700;
-    }
-
-    /* Responsive adjustments */
+    /* Mobile scaling */
     @media (max-width: 850px) {
       .container {
         grid-template-columns: 1fr;
-      }
-      .main-content {
-        grid-template-columns: 1fr;
-      }
-      .store-card {
-        grid-column: span 1;
       }
     }
   </style>
@@ -288,20 +251,6 @@
         <div class="status-badge">
           <span class="status-dot"></span>
           Ready to generate
-        </div>
-      </div>
-
-      <div class="card join-card">
-        <h2 class="card-heading" style="font-size: 1.6rem;">How To Join</h2>
-        
-        <div class="info-group">
-          <span class="info-label">SERVER NAME</span>
-          <div class="info-input">Flavo SMP_</div>
-        </div>
-
-        <div class="info-group">
-          <span class="info-label">SERVER IP</span>
-          <div class="info-input">flavosmp.minehut.gg</div>
         </div>
       </div>
 
