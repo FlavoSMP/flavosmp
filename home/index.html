@@ -105,13 +105,15 @@
       box-shadow: 0 6px 28px rgba(255, 90, 0, 0.8);
     }
 
-    /* Card 2: Link Creator (Lava Ember Gradient) */
+    /* Card 2: Link Creator (Clickable Link Card) */
     .link-creator-card {
       min-height: 180px;
       background: linear-gradient(135deg, #b82600 0%, #630c00 50%, #1a0300 100%);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      text-decoration: none;
+      cursor: pointer;
     }
 
     .status-badge {
@@ -122,6 +124,7 @@
       border-radius: 30px;
       font-size: 0.8rem;
       font-weight: 700;
+      color: #ffffff;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -193,13 +196,13 @@
         </div>
       </div>
 
-      <div class="card link-creator-card">
+      <a href="../link/index.html" class="card link-creator-card">
         <h2 class="card-heading">Link Creator</h2>
         <div class="status-badge">
           <span class="status-dot"></span>
-          Ready to generate
+          Ready to generate &rsaquo;
         </div>
-      </div>
+      </a>
 
       <div class="card join-card">
         <h2 class="card-heading" style="font-size: 1.5rem;">How To Join</h2>
