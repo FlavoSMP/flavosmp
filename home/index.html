@@ -50,13 +50,14 @@
       border-color: rgba(255, 85, 0, 0.55);
     }
 
-    /* Left Sidebar */
+    /* Left Sidebar Column */
     .sidebar {
       display: flex;
       flex-direction: column;
       gap: 16px;
     }
 
+    /* Flavo SMP Brand Card */
     .brand-card {
       background: linear-gradient(145deg, #b82800 0%, #691200 100%);
       border: 1.5px solid rgba(255, 120, 50, 0.5);
@@ -98,6 +99,7 @@
       color: #ffffff;
     }
 
+    /* Copy/Paste IP Box */
     .ip-box {
       background: rgba(18, 18, 20, 0.95);
       border: 1.5px solid rgba(255, 85, 0, 0.3);
@@ -123,7 +125,7 @@
       color: #ffffff;
     }
 
-    /* Main Grid */
+    /* Main Right Grid Area */
     .main-content {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -131,7 +133,7 @@
       gap: 16px;
     }
 
-    /* Clean Store Card without images */
+    /* Store Card */
     .store-card {
       grid-column: span 2;
       min-height: 220px;
@@ -174,36 +176,13 @@
       box-shadow: 0 6px 25px rgba(255, 68, 0, 0.7);
     }
 
-    /* Link Creator Card */
-    .link-creator-card {
+    /* Blank / Custom Design Canvas Card */
+    .custom-card {
       min-height: 180px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      background: linear-gradient(145deg, rgba(38, 38, 42, 0.9) 0%, rgba(20, 20, 24, 0.95) 100%);
     }
 
-    .status-badge {
-      align-self: flex-start;
-      background: rgba(10, 10, 12, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 8px 14px;
-      border-radius: 30px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      background: #ffab00;
-      border-radius: 50%;
-      box-shadow: 0 0 10px #ffab00;
-    }
-
-    /* How to Join Card */
+    /* How to Join Tutorial Card */
     .join-card {
       display: flex;
       flex-direction: column;
@@ -277,5 +256,33 @@
         </div>
       </div>
 
-      <div class="card link-creator-card">
-        <h2 class
+      <div class="card custom-card"></div>
+
+      <div class="card join-card">
+        <h2 class="card-heading" style="font-size: 1.5rem;">How To Join</h2>
+        
+        <div class="info-group">
+          <span class="info-label">SERVER NAME</span>
+          <div class="info-input">Flavo SMP_</div>
+        </div>
+
+        <div class="info-group">
+          <span class="info-label">SERVER IP</span>
+          <div class="info-input">flavosmp.minehut.gg</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    function copyIp() {
+      const ip = document.getElementById('ipDisplay').innerText;
+      navigator.clipboard.writeText(ip);
+      alert('Copied IP: ' + ip);
+    }
+  </script>
+
+</body>
+</html>
