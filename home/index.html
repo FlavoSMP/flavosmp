@@ -18,9 +18,9 @@
 
     body {
       min-height: 100vh;
-      /* Background volcanic render placeholder (replace URL with your high-res image if needed) */
-      background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.75)), 
-                  url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1920&auto=format&fit=crop') center/cover fixed no-repeat;
+      /* Main background volcanic theme fallback */
+      background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.85)), 
+                  url('link-bg.png') center/cover fixed no-repeat;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -36,7 +36,7 @@
       gap: 20px;
     }
 
-    /* Card standard styling */
+    /* Base Card Styling */
     .card {
       background: rgba(18, 12, 10, 0.75);
       backdrop-filter: blur(12px);
@@ -124,7 +124,7 @@
       color: #ffffff;
     }
 
-    /* Right Main Content Grid */
+    /* Right Grid Area */
     .main-content {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -132,22 +132,24 @@
       gap: 20px;
     }
 
-    /* Store Banner Card */
+    /* Store Banner Card with Dragon Render */
     .store-card {
       grid-column: span 2;
-      min-height: 250px;
-      background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), 
-                  url('https://images.unsplash.com/photo-1579783902614-a3fb3927b675?q=80&w=1000&auto=format&fit=crop') center/cover;
+      min-height: 260px;
+      background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.7)), 
+                  url('store-bg.png') center/cover no-repeat;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       padding: 30px;
+      transition: background-size 0.4s ease;
     }
 
     .card-heading {
       font-size: 2.2rem;
       font-weight: 900;
       color: #ffffff;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
     }
 
     .store-btn-container {
@@ -177,19 +179,19 @@
       box-shadow: 0 6px 20px rgba(255, 68, 0, 0.6);
     }
 
-    /* Link Creator Card */
+    /* Link Creator Card with Lava Spiral Render */
     .link-creator-card {
-      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.85)), 
-                  url('https://images.unsplash.com/photo-1508739773434-c26b3d09e071?q=80&w=600&auto=format&fit=crop') center/cover;
+      background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.85)), 
+                  url('link-bg.png') center/cover no-repeat;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 200px;
+      min-height: 210px;
     }
 
     .status-badge {
       align-self: flex-start;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.75);
       border: 1px solid rgba(255, 255, 255, 0.15);
       padding: 8px 16px;
       border-radius: 30px;
@@ -239,7 +241,7 @@
       font-weight: 700;
     }
 
-    /* Responsive scaling for mobile */
+    /* Responsive scaling for mobile screens */
     @media (max-width: 850px) {
       .container {
         grid-template-columns: 1fr;
