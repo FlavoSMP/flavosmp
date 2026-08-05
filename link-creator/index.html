@@ -2,65 +2,53 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>FlavoSMP Link Portal</title>
+    <title>FlavoSMP Server Portal</title>
     <style>
         body { font-family: Arial, sans-serif; background: #121212; color: #fff; text-align: center; padding: 50px; }
         .container { max-width: 500px; margin: auto; background: #1e1e1e; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        select, input, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: none; font-size: 16px; }
-        select, input { background: #2d2d2d; color: #fff; }
-        button { background: #5865F2; color: #fff; font-weight: bold; cursor: pointer; }
-        button:hover { background: #4752C4; }
+        ul { list-style-type: none; padding: 0; }
+        li { background: #2d2d2d; margin: 10px 0; padding: 12px; border-radius: 5px; font-size: 16px; color: #ffd700; }
+        p { color: #b9bbbe; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h2>FlavoSMP Server Portal</h2>
-    <p>Select your linked Minecraft server from the database:</p>
+    <p>Active Minecraft Servers registered in the database:</p>
 
-    <select id="server-list">
-        <option value="">Loading servers...</option>
-    </select>
+    <ul id="server-list">
+        <li>Loading servers...</li>
+    </ul>
 
-    <input type="text" id="link-code" placeholder="Enter 5-Digit Code">
-    <button onclick="submitLinkCode()">Verify Code</button>
+    <p style="margin-top: 20px; font-size: 14px;">
+        To link your account, go to Discord and type: <br>
+        <code style="background: #2f3136; padding: 4px 8px; border-radius: 4px; color: #00ffcc;">/link &lt;code&gt;</code>
+    </p>
 </div>
 
 <script>
 async function loadServers() {
     try {
-        const response = await fetch("https://eoed3phjmlklizm.m.pipedream.net");
+        // Replace with your Pipedream URL that fetches the server list
+        const response = await fetch("https://https://eoed3phjmlklizm.m.pipedream.net");
         const data = await response.json();
-        const select = document.getElementById("server-list");
-        select.innerHTML = "";
+        const listElement = document.getElementById("server-list");
+        listElement.innerHTML = "";
         
         if (data.servers && data.servers.length > 0) {
             data.servers.forEach(server => {
-                let opt = document.createElement("option");
-                opt.value = server.name;
-                opt.textContent = server.name;
-                select.appendChild(opt);
+                let li = document.createElement("li");
+                li.textContent = `🖥️ ${server.name}`;
+                listElement.appendChild(li);
             });
         } else {
-            select.innerHTML = "<option value='FlavoSMP'>FlavoSMP (Default)</option>";
+            listElement.innerHTML = "<li>FlavoSMP (Default)</li>";
         }
     } catch (e) {
         console.error("Could not load servers", e);
+        document.getElementById("server-list").innerHTML = "<li>❌ Failed to load servers.</li>";
     }
-}
-
-async function submitLinkCode() {
-    const code = document.getElementById("link-code").value;
-    const serverName = document.getElementById("server-list").value;
-
-    const response = await fetch("https://eoed3phjmlklizm.m.pipedream.net", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code: code, targetServer: serverName })
-    });
-
-    const result = await response.json();
-    alert(result.message);
 }
 
 window.onload = loadServers;
