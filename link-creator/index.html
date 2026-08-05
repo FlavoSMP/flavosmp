@@ -2,57 +2,116 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>FlavoSMP Server Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlavoSMP - Account & Server Link</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #121212; color: #fff; text-align: center; padding: 50px; }
-        .container { max-width: 500px; margin: auto; background: #1e1e1e; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        ul { list-style-type: none; padding: 0; }
-        li { background: #2d2d2d; margin: 10px 0; padding: 12px; border-radius: 5px; font-size: 16px; color: #ffd700; }
-        p { color: #b9bbbe; }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            width: 350px;
+            text-align: center;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #2d2d2d;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #5865F2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #4752C4;
+        }
+        #result-message {
+            margin-top: 15px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>FlavoSMP Server Portal</h2>
-    <p>Active Minecraft Servers registered in the database:</p>
-
-    <ul id="server-list">
-        <li>Loading servers...</li>
-    </ul>
-
-    <p style="margin-top: 20px; font-size: 14px;">
-        To link your account, go to Discord and type: <br>
-        <code style="background: #2f3136; padding: 4px 8px; border-radius: 4px; color: #00ffcc;">/link &lt;code&gt;</code>
-    </p>
-</div>
-
-<script>
-async function loadServers() {
-    try {
-        // Replace with your Pipedream URL that fetches the server list
-        const response = await fetch("https://https://eoed3phjmlklizm.m.pipedream.net");
-        const data = await response.json();
-        const listElement = document.getElementById("server-list");
-        listElement.innerHTML = "";
+    <div class="container">
+        <h2>FlavoSMP Link Portal</h2>
+        <p>Enter your in-game code below:</p>
         
-        if (data.servers && data.servers.length > 0) {
-            data.servers.forEach(server => {
-                let li = document.createElement("li");
-                li.textContent = `🖥️ ${server.name}`;
-                listElement.appendChild(li);
-            });
-        } else {
-            listElement.innerHTML = "<li>FlavoSMP (Default)</li>";
-        }
-    } catch (e) {
-        console.error("Could not load servers", e);
-        document.getElementById("server-list").innerHTML = "<li>❌ Failed to load servers.</li>";
-    }
-}
+        <input type="text" id="code-input" placeholder="Enter 5-digit code">
+        <button onclick="submitCode()">Link Account / Server</button>
+        
+        <div id="result-message"></div>
+    </div>
 
-window.onload = loadServers;
-</script>
+    <script>
+        async function submitCode() {
+            const code = document.getElementById('code-input').value.trim();
+            const messageDiv = document.getElementById('result-message');
+
+            if (!code) {
+                messageDiv.style.color = '#ff4444';
+                messageDiv.innerText = "❌ Please enter a valid code.";
+                return;
+            }
+
+            messageDiv.style.color = '#ffffff';
+            messageDiv.innerText = "Processing...";
+
+            // Replace with your actual Pipedream webhook URL
+            const pipedreamURL = "https://eoed3phjmlklizm.m.pipedream.net";
+
+            try {
+                const response = await fetch(pipedreamURL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        code: code,
+                        // Note: If this page is loaded inside Discord or with context, 
+                        // pass user_id and guild_id dynamically. Otherwise, handle server-side or via BotGhost.
+                        user_id: "WEB_USER", 
+                        guild_id: "WEB_GUILD"
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    messageDiv.style.color = '#4BB543';
+                    messageDiv.innerText = data.message || "✅ Successfully linked!";
+                } else {
+                    messageDiv.style.color = '#ff4444';
+                    messageDiv.innerText = data.message || "❌ An error occurred.";
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                messageDiv.style.color = '#ff4444';
+                messageDiv.innerText = "❌ Failed to connect to the server.";
+            }
+        }
+    </script>
 
 </body>
 </html>
