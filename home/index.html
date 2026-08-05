@@ -18,9 +18,9 @@
 
     body {
       min-height: 100vh;
-      /* Main background volcanic theme fallback */
-      background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.85)), 
-                  url('link-bg.png') center/cover fixed no-repeat;
+      /* Main page background using your volcanic render */
+      background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.65)), 
+                  url('bg.png') center/cover fixed no-repeat;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -45,7 +45,7 @@
       padding: 24px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
       transition: border-color 0.3s ease, transform 0.2s ease;
     }
 
@@ -142,7 +142,6 @@
       flex-direction: column;
       justify-content: space-between;
       padding: 30px;
-      transition: background-size 0.4s ease;
     }
 
     .card-heading {
@@ -241,7 +240,7 @@
       font-weight: 700;
     }
 
-    /* Responsive scaling for mobile screens */
+    /* Responsive adjustments */
     @media (max-width: 850px) {
       .container {
         grid-template-columns: 1fr;
