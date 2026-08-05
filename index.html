@@ -2,138 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FlavoSMP | Official Portal</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
-    
-    body {
-      background: #0a0a0c;
-      color: #ffffff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-
-    .portal-card {
-      background: #141419;
-      border: 1px solid rgba(255, 152, 0, 0.3);
-      box-shadow: 0 0 30px rgba(255, 152, 0, 0.15);
-      border-radius: 16px;
-      padding: 40px;
-      text-align: center;
-      max-width: 460px;
-      width: 100%;
-    }
-
-    .title {
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: #ff9800;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .subtitle {
-      color: #8a8a93;
-      font-size: 0.95rem;
-      margin-bottom: 28px;
-    }
-
-    .ip-box {
-      background: #0f0f12;
-      border: 2px dashed #ff9800;
-      padding: 14px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: #ffffff;
-      margin-bottom: 20px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .ip-box:hover {
-      background: rgba(255, 152, 0, 0.1);
-      transform: scale(1.02);
-    }
-
-    .btn-group {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .btn {
-      padding: 14px;
-      border-radius: 8px;
-      font-weight: 700;
-      text-decoration: none;
-      transition: 0.2s ease;
-      display: block;
-    }
-
-    .btn-discord {
-      background: #5865F2;
-      color: #ffffff;
-    }
-
-    .btn-discord:hover {
-      background: #4752C4;
-      transform: translateY(-2px);
-    }
-
-    .btn-verify {
-      background: #ff9800;
-      color: #0f0f12;
-    }
-
-    .btn-verify:hover {
-      background: #e68a00;
-      transform: translateY(-2px);
-    }
-
-    .copied-toast {
-      font-size: 0.85rem;
-      color: #4caf50;
-      margin-top: 6px;
-      display: none;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="portal-card">
-    <h1 class="title">🔥 FlavoSMP 🔥</h1>
-    <p class="subtitle">Official Server Verification & Community Hub</p>
-
-    <div class="ip-box" onclick="copyIP()">
-      <span id="ip-text">play.flavosmp.net</span> 📋
-    </div>
-    <div id="copied-toast" class="copied-toast">IP copied to clipboard!</div>
-
-    <div class="btn-group">
-      <a href="https://discord.gg/YOUR_INVITE_HERE" class="btn btn-discord" target="_blank">Join Discord Server</a>
-      
-      <a href="#" class="btn btn-verify">Link Discord Account</a>
-    </div>
-  </div>
-
+  <meta http-equiv="refresh" content="0; url=./home">
+  <title>Redirecting to FlavoSMP...</title>
   <script>
-    function copyIP() {
-      navigator.clipboard.writeText("play.flavosmp.net");
-      const toast = document.getElementById("copied-toast");
-      toast.style.display = "block";
-      setTimeout(() => { toast.style.display = "none"; }, 2500);
-    }
+    // JavaScript backup redirect
+    window.location.href = "./home";
   </script>
-
+</head>
+<body style="background-color: #0a0a0c; color: #ffffff; font-family: sans-serif; text-align: center; padding-top: 100px;">
+  <p>Redirecting to FlavoSMP Home...</p>
+  <p>If you are not redirected automatically, <a href="./home" style="color: #ff9800;">click here</a>.</p>
 </body>
 </html>
