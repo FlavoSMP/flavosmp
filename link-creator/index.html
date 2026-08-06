@@ -117,7 +117,7 @@
     </div>
 
     <script>
-        // Replace with your active Pipedream webhook URL
+        // Your active Pipedream webhook URL
         const PIPEDREAM_API = "https://eoed3phjmlklizm.m.pipedream.net";
 
         async function fetchLinks() {
@@ -181,8 +181,7 @@
         }
 
         function verifyDiscord(code, serverName) {
-            // Redirects to Discord OAuth2 verification flow
-            const clientId = "1531405277440639086"; // Replace with your Discord Bot Client ID
+            const clientId = "YOUR_DISCORD_CLIENT_ID"; // Replace with your Discord Client ID when ready
             const redirectUri = encodeURIComponent(window.location.href);
             window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=identify%20guilds&state=${code}`;
         }
