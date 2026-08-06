@@ -3,113 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlavoSMP - Link Creator Dashboard</title>
+    <title>Flavo SMP | Link Creator Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800;900&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+    
     <style>
-        * { box-sizing: border-box; }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #121212; 
-            color: #fff; 
-            display: flex; 
-            margin: 0; 
-            height: 100vh; 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
-        .sidebar { 
-            width: 320px; 
-            background: #1e1e1e; 
-            border-right: 1px solid #2f3136; 
-            padding: 20px; 
-            overflow-y: auto; 
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at 50% 20%, #3a0d02 0%, #150603 55%, #080302 100%);
+            color: #ffffff;
+            display: flex;
+            margin: 0;
         }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 340px;
+            background: rgba(15, 3, 1, 0.9);
+            border-right: 1.5px solid rgba(255, 100, 0, 0.3);
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
         .sidebar h3 {
-            margin-top: 0;
-            color: #5865F2;
-            font-size: 18px;
-            border-bottom: 1px solid #2f3136;
-            padding-bottom: 10px;
+            color: #ff9d76;
+            font-size: 1rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255, 90, 0, 0.25);
+            padding-bottom: 12px;
         }
-        .main { 
-            flex: 1; 
-            padding: 40px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
+
+        .back-home {
+            color: #ffaa00;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 4px;
+            transition: color 0.2s;
         }
-        .link-card { 
-            background: #2f3136; 
-            padding: 12px 15px; 
-            margin-bottom: 10px; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            border: 1px solid #202225; 
-            transition: background 0.2s, border-color 0.2s;
+
+        .back-home:hover {
+            color: #ffffff;
         }
-        .link-card:hover { 
-            background: #36393f; 
-            border-color: #5865F2; 
+
+        .link-card {
+            background: rgba(30, 8, 3, 0.8);
+            padding: 14px 16px;
+            border-radius: 14px;
+            cursor: pointer;
+            border: 1px solid rgba(255, 90, 0, 0.35);
+            transition: all 0.2s ease;
         }
+
+        .link-card:hover {
+            background: rgba(50, 12, 4, 0.9);
+            border-color: rgba(255, 130, 0, 0.8);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 60, 0, 0.2);
+        }
+
         .link-card strong {
             color: #ffffff;
-            font-size: 15px;
+            font-size: 0.95rem;
         }
+
         .link-card small {
-            color: #b9bbbe;
+            color: #ff9d76;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
         }
-        input, button { 
-            padding: 12px; 
-            margin: 8px 0; 
-            width: 100%; 
-            border-radius: 6px; 
-            border: 1px solid #202225; 
-            background: #2f3136; 
-            color: #fff; 
-            font-size: 14px;
+
+        /* Main Section Styling */
+        .main {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
-        input:focus {
-            border-color: #5865F2;
-            outline: none;
+
+        .panel {
+            background: linear-gradient(135deg, #a31d00 0%, #540700 50%, #150200 100%);
+            padding: 40px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 460px;
+            border: 1.5px solid rgba(255, 100, 0, 0.45);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7),
+                        0 0 20px rgba(255, 60, 0, 0.15);
+            text-align: center;
         }
-        button { 
-            background: #5865F2; 
-            border: none; 
-            cursor: pointer; 
-            font-weight: bold; 
-            transition: background 0.2s;
-        }
-        button:hover { 
-            background: #4752C4; 
-        }
-        .panel { 
-            background: #1e1e1e; 
-            padding: 35px; 
-            border-radius: 10px; 
-            width: 400px; 
-            box-shadow: 0 8px 24px rgba(0,0,0,0.6); 
-            text-align: center; 
-        }
+
         .panel h2 {
             margin-top: 0;
-            color: #5865F2;
+            font-size: 2rem;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
         }
-        #status-msg { 
-            font-size: 13px; 
-            margin-top: 15px; 
-            min-height: 20px;
+
+        .panel p {
+            color: #ff9d76;
+            font-size: 0.85rem;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+            background: rgba(10, 2, 1, 0.85);
+            border: 1px solid rgba(255, 90, 0, 0.45);
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-family: 'Space Mono', monospace;
+            color: #ffaa00;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+            outline: none;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        input:focus {
+            border-color: #ff6a00;
+        }
+
+        button {
+            width: 100%;
+            background: linear-gradient(90deg, #ff6a00, #ff2a00);
+            color: #ffffff;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 180, 100, 0.4);
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 20px rgba(255, 75, 0, 0.6);
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 28px rgba(255, 90, 0, 0.8);
+        }
+
+        #status-msg {
+            font-size: 0.85rem;
+            margin-top: 18px;
+            min-height: 24px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                max-height: 250px;
+            }
+            .main {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
+        <a href="../" class="home-link">&lsaquo; Back to Home</a>
         <h3>Available Links</h3>
-        <div id="sidebar-links">Loading links...</div>
+        <div id="sidebar-links" style="color: #b9bbbe; font-size: 0.85rem;">Loading links...</div>
     </div>
 
     <div class="main">
         <div class="panel">
-            <h2>Create Server Link</h2>
-            <p style="color: #b9bbbe; font-size: 13px; margin-bottom: 20px;">Generate a new link code saved directly to MongoDB.</p>
+            <h2>Link Creator</h2>
+            <p>Generate a new link code saved directly to MongoDB.</p>
             <input type="text" id="server-name" placeholder="Enter Minecraft Server Name">
             <button onclick="createLink()">Generate Link Code</button>
             <div id="status-msg"></div>
@@ -117,7 +204,7 @@
     </div>
 
     <script>
-        // Your active Pipedream webhook URL
+        // Pipedream Webhook URL
         const PIPEDREAM_API = "https://eoed3phjmlklizm.m.pipedream.net";
 
         async function fetchLinks() {
@@ -134,11 +221,11 @@
                         </div>
                     `).join('');
                 } else {
-                    container.innerHTML = "<p style='color: #888; font-size: 14px; text-align: center;'>No active links found.</p>";
+                    container.innerHTML = "<p style='color: #ff9d76; font-size: 0.85rem;'>No active links found.</p>";
                 }
             } catch (err) {
                 console.error("Fetch error:", err);
-                container.innerHTML = "<p style='color: #f04747; font-size: 14px;'>Failed to load links.</p>";
+                container.innerHTML = "<p style='color: #ff4747; font-size: 0.85rem;'>Failed to load links.</p>";
             }
         }
 
@@ -148,12 +235,12 @@
             const statusMsg = document.getElementById('status-msg');
 
             if (!serverName) {
-                statusMsg.style.color = "#f04747";
+                statusMsg.style.color = "#ff4747";
                 statusMsg.innerText = "⚠️ Please enter a server name.";
                 return;
             }
 
-            statusMsg.style.color = "#b9bbbe";
+            statusMsg.style.color = "#ffaa00";
             statusMsg.innerText = "Saving to database...";
 
             try {
@@ -170,18 +257,18 @@
                     serverNameInput.value = "";
                     fetchLinks(); // Refresh sidebar list instantly
                 } else {
-                    statusMsg.style.color = "#f04747";
+                    statusMsg.style.color = "#ff4747";
                     statusMsg.innerText = data.message || "❌ Error saving link.";
                 }
             } catch (err) {
                 console.error("Create error:", err);
-                statusMsg.style.color = "#f04747";
+                statusMsg.style.color = "#ff4747";
                 statusMsg.innerText = "❌ Network error reaching backend.";
             }
         }
 
         function verifyDiscord(code, serverName) {
-            const clientId = "YOUR_DISCORD_CLIENT_ID"; // Replace with your Discord Client ID when ready
+            const clientId = "1531405277440639086"; // Replace with your actual Discord Bot Client ID when ready
             const redirectUri = encodeURIComponent(window.location.href);
             window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=identify%20guilds&state=${code}`;
         }
