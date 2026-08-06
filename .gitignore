@@ -1,11 +1,2 @@
-  # Dependencies
-node_modules/
-
-# Environment variables and secrets
 .env
-
-# System & Editor files
-.DS_Store
-.vscode/
-.idea/
-*.log
+node_modules/
