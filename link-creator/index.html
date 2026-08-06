@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flavo SMP | Link Creator Dashboard</title>
+    <title>Flavo SMP | Link Creator</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800;900&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
@@ -21,13 +21,71 @@
             background: radial-gradient(circle at 50% 20%, #3a0d02 0%, #150603 55%, #080302 100%);
             color: #ffffff;
             display: flex;
-            margin: 0;
+            flex-direction: column;
+        }
+
+        /* Top Title Bar */
+        .top-bar {
+            width: 100%;
+            background: rgba(15, 3, 1, 0.95);
+            border-bottom: 1.5px solid rgba(255, 100, 0, 0.35);
+            padding: 16px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+            z-index: 10;
+        }
+
+        .brand-title {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .brand-title span {
+            color: #ff6a00;
+        }
+
+        .btn-discord {
+            background: linear-gradient(90deg, #5865F2, #4752C4);
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .btn-discord:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 22px rgba(88, 101, 242, 0.6);
+        }
+
+        /* App Body Layout */
+        .app-layout {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 73px);
         }
 
         /* Sidebar Styling */
         .sidebar {
             width: 340px;
-            background: rgba(15, 3, 1, 0.9);
+            background: rgba(15, 3, 1, 0.85);
             border-right: 1.5px solid rgba(255, 100, 0, 0.3);
             padding: 24px;
             overflow-y: auto;
@@ -38,26 +96,12 @@
 
         .sidebar h3 {
             color: #ff9d76;
-            font-size: 1rem;
+            font-size: 0.85rem;
             font-weight: 800;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
             border-bottom: 1px solid rgba(255, 90, 0, 0.25);
-            padding-bottom: 12px;
-        }
-
-        .back-home {
-            color: #ffaa00;
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 700;
-            display: inline-block;
-            margin-bottom: 4px;
-            transition: color 0.2s;
-        }
-
-        .back-home:hover {
-            color: #ffffff;
+            padding-bottom: 10px;
         }
 
         .link-card {
@@ -143,7 +187,7 @@
             border-color: #ff6a00;
         }
 
-        button {
+        .btn-orange {
             width: 100%;
             background: linear-gradient(90deg, #ff6a00, #ff2a00);
             color: #ffffff;
@@ -159,7 +203,7 @@
             transition: all 0.2s ease;
         }
 
-        button:hover {
+        .btn-orange:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 28px rgba(255, 90, 0, 0.8);
         }
@@ -172,8 +216,9 @@
         }
 
         @media (max-width: 768px) {
-            body {
+            .app-layout {
                 flex-direction: column;
+                height: auto;
             }
             .sidebar {
                 width: 100%;
@@ -187,49 +232,37 @@
 </head>
 <body>
 
-    <div class="sidebar">
-        <a href="../" class="home-link">&lsaquo; Back to Home</a>
-        <h3>Available Links</h3>
-        <div id="sidebar-links" style="color: #b9bbbe; font-size: 0.85rem;">Loading links...</div>
-    </div>
+    <header class="top-bar">
+        <a href="../" class="brand-title">Flavo SMP <span>// Link Creator</span></a>
+        <a href="https://discord.com/api/oauth2/authorize?client_id=1531405277440639086&redirect_uri=https%3A%2F%2Fflavosmp.github.io%2Fflavosmp%2Flink-creator%2F&response_type=code&scope=identify%20guilds" class="btn-discord">
+            Login with Discord
+        </a>
+    </header>
 
-    <div class="main">
-        <div class="panel">
-            <h2>Link Creator</h2>
-            <p>Generate a new link code saved directly to MongoDB.</p>
-            <input type="text" id="server-name" placeholder="Enter Minecraft Server Name">
-            <button onclick="createLink()">Generate Link Code</button>
-            <div id="status-msg"></div>
+    <div class="app-layout">
+        <div class="sidebar">
+            <h3>Available Links</h3>
+            <div id="sidebar-links">
+                <p style='color: #b9bbbe; font-size: 0.85rem;'>No links created yet.</p>
+            </div>
+        </div>
+
+        <div class="main">
+            <div class="panel">
+                <h2>Link Creator</h2>
+                <p>Generate a local session link preview.</p>
+                <input type="text" id="server-name" placeholder="Enter Minecraft Server Name">
+                <button class="btn-orange" onclick="createLinkCommand()">Create Link Command</button>
+                <div id="status-msg"></div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Pipedream Webhook URL
-        const PIPEDREAM_API = "https://eoed3phjmlklizm.m.pipedream.net";
+        // Local state array for testing front-end design without a database yet
+        let localLinks = [];
 
-        async function fetchLinks() {
-            const container = document.getElementById('sidebar-links');
-            try {
-                const res = await fetch(`${PIPEDREAM_API}?action=get_links`);
-                const data = await res.json();
-
-                if (data.success && data.links && data.links.length > 0) {
-                    container.innerHTML = data.links.map(l => `
-                        <div class="link-card" onclick="verifyDiscord('${l.code}', '${l.serverName}')">
-                            <strong>${l.serverName}</strong><br>
-                            <small>Code: ${l.code}</small>
-                        </div>
-                    `).join('');
-                } else {
-                    container.innerHTML = "<p style='color: #ff9d76; font-size: 0.85rem;'>No active links found.</p>";
-                }
-            } catch (err) {
-                console.error("Fetch error:", err);
-                container.innerHTML = "<p style='color: #ff4747; font-size: 0.85rem;'>Failed to load links.</p>";
-            }
-        }
-
-        async function createLink() {
+        function createLinkCommand() {
             const serverNameInput = document.getElementById('server-name');
             const serverName = serverNameInput.value.trim();
             const statusMsg = document.getElementById('status-msg');
@@ -240,41 +273,34 @@
                 return;
             }
 
-            statusMsg.style.color = "#ffaa00";
-            statusMsg.innerText = "Saving to database...";
+            // Generate a random mock code
+            const mockCode = Math.floor(10000 + Math.random() * 90000).toString();
+            
+            // Push to local array
+            localLinks.push({ serverName, code: mockCode });
 
-            try {
-                const res = await fetch(PIPEDREAM_API, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ action: "create_link", serverName })
-                });
-                const data = await res.json();
+            statusMsg.style.color = "#43b581";
+            statusMsg.innerText = `✅ Created link command for ${serverName}!`;
+            serverNameInput.value = "";
+            
+            renderSidebar();
+        }
 
-                if (data.success) {
-                    statusMsg.style.color = "#43b581";
-                    statusMsg.innerText = `✅ Created code: ${data.code}`;
-                    serverNameInput.value = "";
-                    fetchLinks(); // Refresh sidebar list instantly
-                } else {
-                    statusMsg.style.color = "#ff4747";
-                    statusMsg.innerText = data.message || "❌ Error saving link.";
-                }
-            } catch (err) {
-                console.error("Create error:", err);
-                statusMsg.style.color = "#ff4747";
-                statusMsg.innerText = "❌ Network error reaching backend.";
+        function renderSidebar() {
+            const container = document.getElementById('sidebar-links');
+            
+            if (localLinks.length === 0) {
+                container.innerHTML = "<p style='color: #ff9d76; font-size: 0.85rem;'>No links created yet.</p>";
+                return;
             }
-        }
 
-        function verifyDiscord(code, serverName) {
-            const clientId = "1531405277440639086"; // Replace with your actual Discord Bot Client ID when ready
-            const redirectUri = encodeURIComponent(window.location.href);
-            window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=identify%20guilds&state=${code}`;
+            container.innerHTML = localLinks.map(l => `
+                <div class="link-card" onclick="alert('Clicked link for: ${l.serverName} (Code: ${l.code})')">
+                    <strong>${l.serverName}</strong><br>
+                    <small>Code: ${l.code}</small>
+                </div>
+            `).join('');
         }
-
-        // Load links when page first loads
-        fetchLinks();
     </script>
 </body>
 </html>
