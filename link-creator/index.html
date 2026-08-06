@@ -2,116 +2,105 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlavoSMP - Account & Server Link</title>
+    <title>FlavoSMP Link Creator</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: #1e1e1e;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            width: 350px;
-            text-align: center;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            background-color: #2d2d2d;
-            border: 1px solid #444;
-            color: #fff;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #5865F2;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        button:hover {
-            background-color: #4752C4;
-        }
-        #result-message {
-            margin-top: 15px;
-            font-size: 14px;
-        }
+        body { font-family: Arial, sans-serif; background: #121212; color: #fff; display: flex; margin: 0; height: 100vh; }
+        .sidebar { width: 300px; background: #1e1e1e; border-right: 1px solid #333; padding: 20px; overflow-y: auto; }
+        .main { flex: 1; padding: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .link-card { background: #2a2a2a; padding: 12px; margin-bottom: 10px; border-radius: 6px; cursor: pointer; border: 1px solid #444; }
+        .link-card:hover { border-color: #5865F2; background: #323232; }
+        input, button { padding: 12px; margin: 8px 0; width: 100%; border-radius: 6px; border: 1px solid #444; background: #222; color: #fff; box-sizing: border-box; }
+        button { background: #5865F2; border: none; cursor: pointer; font-weight: bold; }
+        button:hover { background: #4752C4; }
+        .panel { background: #1e1e1e; padding: 30px; border-radius: 10px; width: 350px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); text-align: center; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2>FlavoSMP Link Portal</h2>
-        <p>Enter your in-game code below:</p>
-        
-        <input type="text" id="code-input" placeholder="Enter 5-digit code">
-        <button onclick="submitCode()">Link Account / Server</button>
-        
-        <div id="result-message"></div>
+    <div class="sidebar">
+        <h3>Available Links</h3>
+        <div id="sidebar-links">Loading links...</div>
+    </div>
+
+    <div class="main">
+        <div class="panel">
+            <h2>Create Server Link</h2>
+            <input type="text" id="server-name" placeholder="Enter Minecraft Server Name">
+            <button onclick="createLink()">Generate Link Code</button>
+            <p id="status-msg" style="font-size: 13px; margin-top: 15px;"></p>
+        </div>
     </div>
 
     <script>
-        async function submitCode() {
-            const code = document.getElementById('code-input').value.trim();
-            const messageDiv = document.getElementById('result-message');
+        // Replace with your Pipedream Webhook URL for fetching links
+        const PIPEDREAM_API = "https://eoed3phjmlklizm.m.pipedream.net";
 
-            if (!code) {
-                messageDiv.style.color = '#ff4444';
-                messageDiv.innerText = "❌ Please enter a valid code.";
+        async function fetchLinks() {
+            try {
+                const res = await fetch(PIPEDREAM_API + "?action=get_links");
+                const data = await res.json();
+                const container = document.getElementById('sidebar-links');
+
+                if (data.links && data.links.length > 0) {
+                    container.innerHTML = data.links.map(l => `
+                        <div class="link-card" onclick="verifyDiscord('${l.code}')">
+                            <strong>${l.serverName}</strong><br>
+                            <small>Code: ${l.code}</small>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = "<p style='color: #888;'>No links available.</p>";
+                }
+            } catch (err) {
+                document.getElementById('sidebar-links').innerText = "Failed to load links.";
+            }
+        }
+
+        async function createLink() {
+            const serverName = document.getElementById('server-name').value.trim();
+            const statusMsg = document.getElementById('status-msg');
+
+            if (!serverName) {
+                statusMsg.style.color = "#f04747";
+                statusMsg.innerText = "⚠️ Please enter a server name.";
                 return;
             }
 
-            messageDiv.style.color = '#ffffff';
-            messageDiv.innerText = "Processing...";
-
-            // Replace with your actual Pipedream webhook URL
-            const pipedreamURL = "https://eoed3phjmlklizm.m.pipedream.net";
+            statusMsg.style.color = "#fff";
+            statusMsg.innerText = "Saving to database...";
 
             try {
-                const response = await fetch(pipedreamURL, {
+                const res = await fetch(PIPEDREAM_API, {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        code: code,
-                        // Note: If this page is loaded inside Discord or with context, 
-                        // pass user_id and guild_id dynamically. Otherwise, handle server-side or via BotGhost.
-                        user_id: "WEB_USER", 
-                        guild_id: "WEB_GUILD"
-                    })
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ action: "create_link", serverName })
                 });
-
-                const data = await response.json();
+                const data = await res.json();
 
                 if (data.success) {
-                    messageDiv.style.color = '#4BB543';
-                    messageDiv.innerText = data.message || "✅ Successfully linked!";
+                    statusMsg.style.color = "#43b581";
+                    statusMsg.innerText = `✅ Created code: ${data.code}`;
+                    document.getElementById('server-name').value = "";
+                    fetchLinks(); // Refresh sidebar list
                 } else {
-                    messageDiv.style.color = '#ff4444';
-                    messageDiv.innerText = data.message || "❌ An error occurred.";
+                    statusMsg.style.color = "#f04747";
+                    statusMsg.innerText = "❌ Error saving link.";
                 }
-            } catch (error) {
-                console.error("Error:", error);
-                messageDiv.style.color = '#ff4444';
-                messageDiv.innerText = "❌ Failed to connect to the server.";
+            } catch (err) {
+                statusMsg.style.color = "#f04747";
+                statusMsg.innerText = "❌ Network error.";
             }
         }
-    </script>
 
+        function verifyDiscord(code) {
+            // This redirects the user to Discord OAuth2 to check their servers
+            const clientId = "1531405277440639086";
+            const redirectUri = encodeURIComponent("https://flavosmp.github.io/link-creator/");
+            window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=identify%20guilds&state=${code}`;
+        }
+
+        // Load links when page opens
+        fetchLinks();
+    </script>
 </body>
 </html>
