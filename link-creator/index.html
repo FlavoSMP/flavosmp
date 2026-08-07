@@ -3,303 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flavo SMP | Link Creator</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800;900&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        body {
-            min-height: 100vh;
-            background: radial-gradient(circle at 50% 20%, #3a0d02 0%, #150603 55%, #080302 100%);
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Top Title Bar */
-        .top-bar {
-            width: 100%;
-            background: rgba(15, 3, 1, 0.95);
-            border-bottom: 1.5px solid rgba(255, 100, 0, 0.35);
-            padding: 16px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-            z-index: 10;
-        }
-
-        .brand-title {
-            font-size: 1.25rem;
-            font-weight: 900;
-            color: #ffffff;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-        }
-
-        .brand-title span {
-            color: #ff6a00;
-        }
-
-        .btn-discord {
-            background: linear-gradient(90deg, #5865F2, #4752C4);
-            color: #ffffff;
-            padding: 10px 20px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 800;
-            font-size: 0.8rem;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.2s ease;
-        }
-
-        .btn-discord:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 22px rgba(88, 101, 242, 0.6);
-        }
-
-        /* App Body Layout */
-        .app-layout {
-            display: flex;
-            flex: 1;
-            height: calc(100vh - 73px);
-        }
-
-        /* Sidebar Styling */
-        .sidebar {
-            width: 340px;
-            background: rgba(15, 3, 1, 0.85);
-            border-right: 1.5px solid rgba(255, 100, 0, 0.3);
-            padding: 24px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .sidebar h3 {
-            color: #ff9d76;
-            font-size: 0.85rem;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            border-bottom: 1px solid rgba(255, 90, 0, 0.25);
-            padding-bottom: 10px;
-        }
-
-        .link-card {
-            background: rgba(30, 8, 3, 0.8);
-            padding: 14px 16px;
-            border-radius: 14px;
-            cursor: pointer;
-            border: 1px solid rgba(255, 90, 0, 0.35);
-            transition: all 0.2s ease;
-        }
-
-        .link-card:hover {
-            background: rgba(50, 12, 4, 0.9);
-            border-color: rgba(255, 130, 0, 0.8);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(255, 60, 0, 0.2);
-        }
-
-        .link-card strong {
-            color: #ffffff;
-            font-size: 0.95rem;
-        }
-
-        .link-card small {
-            color: #ff9d76;
-            font-family: 'Space Mono', monospace;
-            font-size: 0.8rem;
-        }
-
-        /* Main Section Styling */
-        .main {
-            flex: 1;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .panel {
-            background: linear-gradient(135deg, #a31d00 0%, #540700 50%, #150200 100%);
-            padding: 40px;
-            border-radius: 24px;
-            width: 100%;
-            max-width: 460px;
-            border: 1.5px solid rgba(255, 100, 0, 0.45);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7),
-                        0 0 20px rgba(255, 60, 0, 0.15);
-            text-align: center;
-        }
-
-        .panel h2 {
-            margin-top: 0;
-            font-size: 2rem;
-            font-weight: 900;
-            color: #ffffff;
-            margin-bottom: 8px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
-        }
-
-        .panel p {
-            color: #ff9d76;
-            font-size: 0.85rem;
-            margin-bottom: 25px;
-        }
-
-        input {
-            width: 100%;
-            background: rgba(10, 2, 1, 0.85);
-            border: 1px solid rgba(255, 90, 0, 0.45);
-            border-radius: 12px;
-            padding: 14px 16px;
-            font-family: 'Space Mono', monospace;
-            color: #ffaa00;
-            font-weight: 700;
-            font-size: 0.9rem;
-            margin-bottom: 16px;
-            outline: none;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
-        }
-
-        input:focus {
-            border-color: #ff6a00;
-        }
-
-        .btn-orange {
-            width: 100%;
-            background: linear-gradient(90deg, #ff6a00, #ff2a00);
-            color: #ffffff;
-            padding: 14px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 180, 100, 0.4);
-            cursor: pointer;
-            font-weight: 800;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 20px rgba(255, 75, 0, 0.6);
-            transition: all 0.2s ease;
-        }
-
-        .btn-orange:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 28px rgba(255, 90, 0, 0.8);
-        }
-
-        #status-msg {
-            font-size: 0.85rem;
-            margin-top: 18px;
-            min-height: 24px;
-            font-weight: 700;
-        }
-
-        @media (max-width: 768px) {
-            .app-layout {
-                flex-direction: column;
-                height: auto;
-            }
-            .sidebar {
-                width: 100%;
-                max-height: 250px;
-            }
-            .main {
-                padding: 20px;
-            }
-        }
-    </style>
+    <title>FlavoSMP - Server Linker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-slate-800 p-8 rounded-2xl shadow-xl border border-slate-700">
+        <h1 class="text-2xl font-bold mb-2 text-center text-indigo-400">FlavoSMP Linker</h1>
+        <p class="text-slate-400 text-sm mb-6 text-center">Link your Minecraft server to your Discord community.</p>
 
-    <header class="top-bar">
-        <a href="../" class="brand-title">Flavo SMP <span>// Link Creator</span></a>
-        <a href="https://discord.com/api/oauth2/authorize?client_id=1531405277440639086&redirect_uri=https%3A%2F%2Fflavosmp.github.io%2Fflavosmp%2Flink-creator%2F&response_type=code&scope=identify%20guilds" class="btn-discord">
-            Login with Discord
-        </a>
-    </header>
-
-    <div class="app-layout">
-        <div class="sidebar">
-            <h3>Available Links</h3>
-            <div id="sidebar-links">
-                <p style='color: #b9bbbe; font-size: 0.85rem;'>No links created yet.</p>
+        <div id="create-section">
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-2" for="serverName">Minecraft Server Name</label>
+                <input type="text" id="serverName" placeholder="e.g. MyAwesomeSMP" 
+                    class="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg focus:outline-none focus:border-indigo-500">
             </div>
+            <button onclick="createLink()" 
+                class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 rounded-lg transition">
+                Generate Link Code
+            </button>
         </div>
 
-        <div class="main">
-            <div class="panel">
-                <h2>Link Creator</h2>
-                <p>Generate a local session link preview.</p>
-                <input type="text" id="server-name" placeholder="Enter Minecraft Server Name">
-                <button class="btn-orange" onclick="createLinkCommand()">Create Link Command</button>
-                <div id="status-msg"></div>
+        <div id="result-section" class="hidden text-center mt-4">
+            <div class="bg-slate-900 p-4 rounded-lg border border-slate-700 mb-4">
+                <p class="text-xs text-slate-400 uppercase tracking-wider mb-1">Your Link Code</p>
+                <span id="displayCode" class="text-3xl font-mono font-bold text-emerald-400 tracking-widest">-----</span>
             </div>
+            <p class="text-xs text-slate-300 mb-4">
+                Go to your Discord server and type:<br>
+                <code class="bg-slate-900 px-2 py-1 rounded text-indigo-300 font-mono">/server-link <span class="code-span">CODE</span></code>
+            </p>
+            <button onclick="resetForm()" class="text-sm text-slate-400 hover:text-white underline">Create another code</button>
         </div>
+
+        <div id="loading" class="hidden text-center py-4 text-indigo-400">Processing...</div>
+        <div id="errorMsg" class="hidden text-center mt-4 text-sm text-red-400"></div>
     </div>
 
     <script>
-        // Local state array for testing front-end design without a database yet
-        let localLinks = [];
+        const WEBHOOK_URL = "https://eoed3phjmlklizm.m.pipedream.net"; // <-- Paste your Pipedream URL here
 
-        function createLinkCommand() {
-            const serverNameInput = document.getElementById('server-name');
-            const serverName = serverNameInput.value.trim();
-            const statusMsg = document.getElementById('status-msg');
-
+        async function createLink() {
+            const serverName = document.getElementById('serverName').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+            const loading = document.getElementById('loading');
+            
+            errorMsg.classList.add('hidden');
             if (!serverName) {
-                statusMsg.style.color = "#ff4747";
-                statusMsg.innerText = "⚠️ Please enter a server name.";
+                errorMsg.textContent = "Please enter a server name.";
+                errorMsg.classList.remove('hidden');
                 return;
             }
 
-            // Generate a random mock code
-            const mockCode = Math.floor(10000 + Math.random() * 90000).toString();
-            
-            // Push to local array
-            localLinks.push({ serverName, code: mockCode });
+            loading.classList.remove('hidden');
 
-            statusMsg.style.color = "#43b581";
-            statusMsg.innerText = `✅ Created link command for ${serverName}!`;
-            serverNameInput.value = "";
-            
-            renderSidebar();
+            try {
+                const response = await fetch(`${WEBHOOK_URL}?action=create_link`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ serverName })
+                });
+                const data = await response.json();
+                loading.classList.add('hidden');
+
+                if (data.success) {
+                    document.getElementById('create-section').classList.add('hidden');
+                    document.getElementById('displayCode').textContent = data.code;
+                    document.querySelectorAll('.code-span').forEach(el => el.textContent = data.code);
+                    document.getElementById('result-section').classList.remove('hidden');
+                } else {
+                    errorMsg.textContent = data.message || "Failed to generate code.";
+                    errorMsg.classList.remove('hidden');
+                }
+            } catch (err) {
+                loading.classList.add('hidden');
+                errorMsg.textContent = "Network error. Check your webhook URL.";
+                errorMsg.classList.remove('hidden');
+            }
         }
 
-        function renderSidebar() {
-            const container = document.getElementById('sidebar-links');
-            
-            if (localLinks.length === 0) {
-                container.innerHTML = "<p style='color: #ff9d76; font-size: 0.85rem;'>No links created yet.</p>";
-                return;
-            }
-
-            container.innerHTML = localLinks.map(l => `
-                <div class="link-card" onclick="alert('Clicked link for: ${l.serverName} (Code: ${l.code})')">
-                    <strong>${l.serverName}</strong><br>
-                    <small>Code: ${l.code}</small>
-                </div>
-            `).join('');
+        function resetForm() {
+            document.getElementById('serverName').value = '';
+            document.getElementById('result-section').classList.add('hidden');
+            document.getElementById('create-section').classList.remove('hidden');
         }
     </script>
 </body>
