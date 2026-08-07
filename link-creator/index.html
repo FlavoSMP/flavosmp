@@ -282,14 +282,14 @@
         <div id="server-view" class="view">
             <div class="glass-card">
                 <h1 id="activeServerTitle">Server Name</h1>
-                <p class="subtitle">Run this command in your Discord server to link it.</p>
+                <p class="subtitle" id="activeSubtitle">Run this command in your Discord server to link it.</p>
 
                 <div class="command-area">
                     <div class="command-text" id="activeCommandText">/server-link -----</div>
-                    <span class="copy-hint">Code expires when used.</span>
+                    <span class="copy-hint" id="activeCopyHint">Code expires when used.</span>
                 </div>
 
-                <button class="btn-fire" style="background: transparent; border: 2px solid var(--fire-main); box-shadow: none;" onclick="generateNewCodeForActive()">
+                <button class="btn-fire" id="regenerateBtn" style="background: transparent; border: 2px solid var(--fire-main); box-shadow: none;" onclick="generateNewCodeForActive()">
                     Regenerate Code
                 </button>
             </div>
@@ -298,11 +298,10 @@
     </div>
 
     <script>
-        // Array to store our created servers locally with persistent storage
         let servers = JSON.parse(localStorage.getItem('flavo_servers') || '[]');
         let activeServerIndex = null;
+        let checkInterval = null;
 
-        // DOM Elements
         const sidebarList = document.getElementById('sidebar-list');
         const emptyState = document.getElementById('empty-state');
         const creatorView = document.getElementById('creator-view');
@@ -312,8 +311,8 @@
             localStorage.setItem('flavo_servers', JSON.stringify(servers));
         }
 
-        // Functions to Switch Views
         function openCreatorView(pushHistory = true) {
+            if (checkInterval) clearInterval(checkInterval);
             if (pushHistory) {
                 window.history.pushState({}, '', '/flavosmp/link-creator/');
             }
@@ -326,6 +325,7 @@
         }
 
         function openServerView(index, pushHistory = true) {
+            if (checkInterval) clearInterval(checkInterval);
             activeServerIndex = index;
             const srv = servers[index];
 
@@ -336,14 +336,56 @@
             }
 
             document.getElementById('activeServerTitle').innerText = srv.name;
-            document.getElementById('activeCommandText').innerText = `/server-link ${srv.code}`;
+            
+            const commandTextEl = document.getElementById('activeCommandText');
+            const subtitleEl = document.getElementById('activeSubtitle');
+            const hintEl = document.getElementById('activeCopyHint');
+            const regenBtn = document.getElementById('regenerateBtn');
+
+            if (srv.status === 'Linked ✅') {
+                commandTextEl.innerText = 'SUCCESSFULLY LINKED!';
+                subtitleEl.innerText = 'Your Discord server is connected to this site.';
+                hintEl.innerText = 'Server is active and synced.';
+                regenBtn.style.display = 'none';
+            } else {
+                commandTextEl.innerText = `/server-link ${srv.code}`;
+                subtitleEl.innerText = 'Run this command in your Discord server to link it.';
+                hintEl.innerText = 'Code expires when used.';
+                regenBtn.style.display = 'block';
+                
+                // Start polling Pipedream to check if it gets linked
+                checkInterval = setInterval(() => checkServerStatus(index), 5000);
+            }
 
             creatorView.classList.remove('active');
             serverView.classList.add('active');
             updateSidebar();
         }
 
-        // --- REAL PIPEDREAM CREATION LOGIC ---
+        async function checkServerStatus(index) {
+            if (activeServerIndex !== index) return;
+            const srv = servers[index];
+            if (!srv || srv.status === 'Linked ✅') return;
+
+            try {
+                const response = await fetch("https://eoed3phjmlklizm.m.pipedream.net/", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'check_status', code: srv.code })
+                });
+                const data = await response.json();
+                
+                if (data.success && data.claimed) {
+                    servers[index].status = 'Linked ✅';
+                    saveServers();
+                    if (checkInterval) clearInterval(checkInterval);
+                    openServerView(index, false);
+                }
+            } catch (err) {
+                console.error("Polling check failed", err);
+            }
+        }
+
         async function simulateCreation() {
             const input = document.getElementById('serverNameInput');
             const name = input.value.trim();
@@ -382,12 +424,11 @@
             }
         }
 
-        // --- REAL PIPEDREAM REGENERATE LOGIC ---
         async function generateNewCodeForActive() {
             if(activeServerIndex === null) return;
             const srv = servers[activeServerIndex];
 
-            const btn = document.querySelector('#server-view .btn-fire');
+            const btn = document.getElementById('regenerateBtn');
             const originalText = btn.innerText;
             btn.innerText = "GENERATING...";
             btn.disabled = true;
@@ -403,8 +444,9 @@
                 
                 if (data.success) {
                     servers[activeServerIndex].code = data.code;
+                    servers[activeServerIndex].status = 'Awaiting Discord Link...';
                     saveServers();
-                    document.getElementById('activeCommandText').innerText = `/server-link ${data.code}`;
+                    openServerView(activeServerIndex, false);
                 } else {
                     alert("Error: " + (data.message || "Unknown error"));
                 }
@@ -440,7 +482,6 @@
             });
         }
 
-        // --- ROUTING LOGIC ON PAGE LOAD ---
         function handleRoutingOnLoad() {
             const urlParams = new URLSearchParams(window.location.search);
             const redirectPath = urlParams.get('redirect');
