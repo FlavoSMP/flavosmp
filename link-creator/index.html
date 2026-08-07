@@ -40,7 +40,7 @@
     </div>
 
     <script>
-        const WEBHOOK_URL = "https://eoed3phjmlklizm.m.pipedream.net"; // <-- Paste your Pipedream URL here
+        const WEBHOOK_URL = "https://eoed3phjmlklizm.m.pipedream.net"; // <-- Paste your Pipedream webhook URL here
 
         async function createLink() {
             const serverName = document.getElementById('serverName').value.trim();
@@ -57,10 +57,10 @@
             loading.classList.remove('hidden');
 
             try {
-                const response = await fetch(`${WEBHOOK_URL}?action=create_link`, {
+                const response = await fetch(WEBHOOK_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ serverName })
+                    body: JSON.stringify({ action: 'create_link', serverName })
                 });
                 const data = await response.json();
                 loading.classList.add('hidden');
