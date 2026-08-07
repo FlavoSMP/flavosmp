@@ -6,12 +6,15 @@
     <title>FlavoSMP Linker</title>
     <style>
         :root {
-            --bg-color: #0d0b0b;
-            --card-bg: rgba(20, 15, 15, 0.85);
-            --border-fire: rgba(255, 69, 0, 0.4);
-            --fire-gradient: linear-gradient(135deg, #ff2a00, #ff7700, #ffb700);
+            --bg-dark: #0a0505;
+            --sidebar-bg: #120909;
+            --card-bg: rgba(25, 12, 12, 0.8);
+            --fire-main: #ff4500;
+            --fire-light: #ff8c00;
+            --fire-yellow: #ffcc00;
             --text-main: #ffffff;
-            --text-sub: #b0a8a8;
+            --text-muted: #8c7b7b;
+            --border-glow: rgba(255, 69, 0, 0.3);
         }
 
         * {
@@ -22,386 +25,371 @@
         }
 
         body {
-            background-color: var(--bg-color);
-            background-image: radial-gradient(circle at 50% 10%, rgba(255, 69, 0, 0.15), transparent 60%);
+            background-color: var(--bg-dark);
             color: var(--text-main);
-            min-height: 100vh;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            background-image: radial-gradient(circle at 100% 100%, rgba(255, 69, 0, 0.05), transparent 50%),
+                              radial-gradient(circle at 0% 0%, rgba(255, 140, 0, 0.05), transparent 50%);
+        }
+
+        /* --- SCROLLBAR STYLING --- */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--fire-main); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--fire-light); }
+
+        /* --- LAYOUT --- */
+        .sidebar {
+            width: 300px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-glow);
             display: flex;
             flex-direction: column;
+            height: 100%;
+            box-shadow: 5px 0 25px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 50px;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
             align-items: center;
-            padding: 40px 20px;
         }
 
-        .container {
-            width: 100%;
-            max-width: 700px;
-        }
-
-        header {
+        /* --- SIDEBAR --- */
+        .sidebar-header {
+            padding: 30px 20px;
+            border-bottom: 1px solid var(--border-glow);
             text-align: center;
-            margin-bottom: 40px;
         }
 
-        header h1 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            background: var(--fire-gradient);
+        .sidebar-header h2 {
+            background: linear-gradient(90deg, var(--fire-main), var(--fire-yellow));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(255, 119, 0, 0.4);
+            font-size: 1.8rem;
+            text-shadow: 0 0 20px rgba(255, 69, 0, 0.2);
+        }
+
+        .new-link-btn {
+            display: block;
+            width: calc(100% - 40px);
+            margin: 20px auto;
+            padding: 12px;
+            background: transparent;
+            border: 2px dashed var(--fire-light);
+            color: var(--fire-light);
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .new-link-btn:hover {
+            background: rgba(255, 140, 0, 0.1);
+            box-shadow: 0 0 15px rgba(255, 140, 0, 0.3);
+        }
+
+        .server-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .server-item {
+            padding: 15px 20px;
             margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            transition: all 0.2s ease;
         }
 
-        header p {
-            color: var(--text-sub);
+        .server-item:hover, .server-item.active {
+            background: rgba(255, 69, 0, 0.1);
+            border-left: 3px solid var(--fire-main);
+        }
+
+        .server-item h4 {
             font-size: 1.1rem;
+            margin-bottom: 5px;
         }
 
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-fire);
-            backdrop-filter: blur(12px);
-            border-radius: 20px;
-            padding: 35px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 69, 0, 0.1);
-            margin-bottom: 25px;
+        .server-item p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
         }
 
+        .empty-state {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--text-muted);
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        /* --- VIEWS --- */
         .view {
             display: none;
+            width: 100%;
+            max-width: 650px;
+            animation: fadeIn 0.4s ease forwards;
         }
 
         .view.active {
             display: block;
         }
 
-        /* Form Controls */
-        .form-group {
-            margin-bottom: 20px;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--text-sub);
+        /* --- CARDS & FORMS --- */
+        .glass-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 20px rgba(255, 69, 0, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .glass-card h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .glass-card p.subtitle {
+            color: var(--text-muted);
+            margin-bottom: 30px;
         }
 
         input[type="text"] {
             width: 100%;
-            padding: 14px 18px;
-            background: rgba(10, 8, 8, 0.8);
-            border: 2px solid rgba(255, 69, 0, 0.3);
-            border-radius: 12px;
+            padding: 15px;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid var(--text-muted);
+            border-radius: 8px;
             color: white;
             font-size: 1.1rem;
-            outline: none;
+            margin-bottom: 20px;
             transition: all 0.3s ease;
         }
 
         input[type="text"]:focus {
-            border-color: #ff7700;
-            box-shadow: 0 0 15px rgba(255, 119, 0, 0.4);
+            outline: none;
+            border-color: var(--fire-main);
+            box-shadow: 0 0 15px rgba(255, 69, 0, 0.4);
         }
 
-        .btn {
+        .btn-fire {
             width: 100%;
-            padding: 14px;
-            background: var(--fire-gradient);
+            padding: 15px;
+            background: linear-gradient(135deg, var(--fire-main), var(--fire-light));
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             color: white;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 15px rgba(255, 69, 0, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(255, 119, 0, 0.6);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            border: 2px solid rgba(255, 119, 0, 0.5);
-            margin-top: 15px;
-            box-shadow: none;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 119, 0, 0.1);
-        }
-
-        /* Server List Grid */
-        .server-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .server-card {
-            background: rgba(30, 20, 20, 0.6);
-            border: 1px solid rgba(255, 69, 0, 0.3);
-            border-radius: 12px;
-            padding: 18px 22px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .server-card:hover {
-            border-color: #ff7700;
-            transform: translateX(5px);
-            box-shadow: 0 0 15px rgba(255, 119, 0, 0.2);
-        }
-
-        .server-info h3 {
             font-size: 1.2rem;
-            margin-bottom: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 5px 20px rgba(255, 69, 0, 0.4);
         }
 
-        .server-info span {
-            font-size: 0.85rem;
-            color: var(--text-sub);
+        .btn-fire:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255, 140, 0, 0.6);
         }
 
-        .code-display {
-            background: rgba(10, 8, 8, 0.9);
-            border: 2px dashed rgba(255, 119, 0, 0.5);
-            border-radius: 15px;
+        /* --- COMMAND GENERATOR UI --- */
+        .command-area {
+            background: #000;
+            border: 2px solid var(--fire-main);
+            border-radius: 8px;
             padding: 25px;
             text-align: center;
-            margin: 20px 0;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .code-box {
-            font-size: 2.5rem;
-            font-weight: 800;
-            letter-spacing: 4px;
-            color: #ffb700;
-            text-shadow: 0 0 15px rgba(255, 183, 0, 0.5);
+        .command-area::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            to { left: 200%; }
+        }
+
+        .command-text {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.8rem;
+            color: var(--fire-yellow);
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+        }
+
+        .copy-hint {
+            display: block;
             margin-top: 10px;
-        }
-
-        .command-box {
-            background: rgba(0, 0, 0, 0.6);
-            padding: 12px;
-            border-radius: 8px;
-            font-family: monospace;
-            color: #ff7700;
-            margin: 15px 0;
-            font-size: 1.1rem;
-        }
-
-        .error-msg {
-            color: #ff4d4d;
-            margin-top: 15px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 0.8s ease infinite;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+            font-size: 0.9rem;
+            color: var(--text-muted);
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <h1>FlavoSMP Linker</h1>
-            <p>Link your Minecraft server to your Discord community.</p>
-        </header>
-
-        <div id="home-view" class="view active">
-            <div class="card">
-                <h2 style="margin-bottom: 20px; font-size: 1.5rem;">Your Connected Servers</h2>
-                <div id="server-list" class="server-grid">
-                    </div>
-                <div id="no-servers" style="text-align: center; color: var(--text-sub); padding: 20px 0; display: none;">
-                    No servers registered yet. Click below to add one!
-                </div>
-                <button class="btn" onclick="switchView('create-view')">+ Add New Server</button>
-            </div>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>FlavoSMP</h2>
         </div>
-
-        <div id="create-view" class="view">
-            <div class="card">
-                <h2 style="margin-bottom: 20px; font-size: 1.5rem;">Register New Server</h2>
-                <div class="form-group">
-                    <label for="serverNameInput">Server Name</label>
-                    <input type="text" id="serverNameInput" placeholder="e.g. Flavo SMP #2">
-                </div>
-                <button class="btn" id="createBtn" onclick="createServerCode()">Generate Code</button>
-                <button class="btn btn-secondary" onclick="switchView('home-view')">Back to Dashboard</button>
-                <div id="createError" class="error-msg"></div>
-            </div>
-        </div>
-
-        <div id="detail-view" class="view">
-            <div class="card" style="text-align: center;">
-                <h2 id="detailServerName" style="font-size: 1.8rem; margin-bottom: 10px;">Server Name</h2>
-                <p style="color: var(--text-sub);">Use this code to connect your server via Discord.</p>
-                
-                <div class="code-display">
-                    <span style="font-size: 0.9rem; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px;">Link Code</span>
-                    <div id="detailCode" class="code-box">-----</div>
-                </div>
-
-                <p style="margin-top: 20px;">Go to your Discord server and type:</p>
-                <div id="detailCommand" class="command-box">/server-link -----</div>
-
-                <button class="btn" onclick="generateNewCodeForCurrent()" style="margin-top: 15px;">Generate New Code</button>
-                <button class="btn btn-secondary" onclick="switchView('home-view')">Back to Dashboard</button>
+        
+        <button class="new-link-btn" onclick="openCreatorView()">+ CREATE NEW LINK</button>
+        
+        <div class="server-list" id="sidebar-list">
+            <div class="empty-state" id="empty-state">
+                No servers linked yet. Create one to get started!
             </div>
         </div>
     </div>
 
+    <div class="main-content">
+        
+        <div id="creator-view" class="view active">
+            <div class="glass-card">
+                <h1>Create Server Link</h1>
+                <p class="subtitle">Generate a secure connection code for your Minecraft server.</p>
+                
+                <input type="text" id="serverNameInput" placeholder="Enter Server Name (e.g. Flavo SMP)">
+                <button class="btn-fire" onclick="simulateCreation()">Generate Link Code</button>
+            </div>
+        </div>
+
+        <div id="server-view" class="view">
+            <div class="glass-card">
+                <h1 id="activeServerTitle">Server Name</h1>
+                <p class="subtitle">Run this command in your Discord server to link it.</p>
+
+                <div class="command-area">
+                    <div class="command-text" id="activeCommandText">/server-link -----</div>
+                    <span class="copy-hint">Code expires when used.</span>
+                </div>
+
+                <button class="btn-fire" style="background: transparent; border: 2px solid var(--fire-main); box-shadow: none;" onclick="generateNewCodeForActive()">
+                    Regenerate Code
+                </button>
+            </div>
+        </div>
+
+    </div>
+
     <script>
-        const PIPEDREAM_URL = "https://eoed3phjmlklizm.m.pipedream.net/";
-        let servers = JSON.parse(localStorage.getItem('flavo_servers') || '[]');
-        let currentServerId = null;
+        // Array to store our created servers locally
+        let servers = [];
+        let activeServerIndex = null;
 
-        function saveServers() {
-            localStorage.setItem('flavo_servers', JSON.stringify(servers));
+        // DOM Elements
+        const sidebarList = document.getElementById('sidebar-list');
+        const emptyState = document.getElementById('empty-state');
+        const creatorView = document.getElementById('creator-view');
+        const serverView = document.getElementById('server-view');
+
+        // Functions to Switch Views
+        function openCreatorView() {
+            // Update URL to base
+            window.history.pushState({}, '', '/flavosmp/link-creator/');
+            
+            creatorView.classList.add('active');
+            serverView.classList.remove('active');
+            
+            // Remove active highlight from sidebar
+            document.querySelectorAll('.server-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('serverNameInput').value = '';
         }
 
-        function switchView(viewId) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById(viewId).classList.add('active');
-            if(viewId === 'home-view') {
-                renderServerList();
-            }
+        function openServerView(index) {
+            activeServerIndex = index;
+            const srv = servers[index];
+
+            // Generate URL friendly slug (e.g., "Flavo SMP" -> "flavo-smp")
+            const slug = srv.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            
+            // MAGIC TRICK: Change URL without reloading the page!
+            window.history.pushState({}, '', `/flavosmp/link-creator/${slug}`);
+
+            // Update UI
+            document.getElementById('activeServerTitle').innerText = srv.name;
+            document.getElementById('activeCommandText').innerText = `/server-link ${srv.code}`;
+
+            creatorView.classList.remove('active');
+            serverView.classList.add('active');
+            updateSidebar();
         }
 
-        function renderServerList() {
-            const listEl = document.getElementById('server-list');
-            const noServersEl = document.getElementById('no-servers');
-            listEl.innerHTML = '';
+        // Functions for UI Logic
+        function simulateCreation() {
+            const input = document.getElementById('serverNameInput');
+            const name = input.value.trim();
+            if(!name) return alert("Please enter a server name!");
 
+            // Fake generating a random 5 digit code (Will hook to Pipedream later)
+            const randomCode = Math.floor(10000 + Math.random() * 90000).toString();
+
+            servers.push({
+                name: name,
+                code: randomCode,
+                status: 'Awaiting Discord Link...'
+            });
+
+            // Open the new server's page
+            openServerView(servers.length - 1);
+        }
+
+        function generateNewCodeForActive() {
+            if(activeServerIndex === null) return;
+            const randomCode = Math.floor(10000 + Math.random() * 90000).toString();
+            servers[activeServerIndex].code = randomCode;
+            document.getElementById('activeCommandText').innerText = `/server-link ${randomCode}`;
+        }
+
+        function updateSidebar() {
             if (servers.length === 0) {
-                noServersEl.style.display = 'block';
+                emptyState.style.display = 'block';
                 return;
             }
-            noServersEl.style.display = 'none';
+            
+            emptyState.style.display = 'none';
+            // Clear current list (keeping the empty state div intact)
+            Array.from(sidebarList.children).forEach(child => {
+                if(child.id !== 'empty-state') child.remove();
+            });
 
             servers.forEach((srv, index) => {
-                const item = document.createElement('div');
-                item.className = 'server-card';
-                item.innerHTML = `
-                    <div class="server-info">
-                        <h3>${escapeHtml(srv.serverName)}</h3>
-                        <span>Code: <strong>${srv.code}</strong></span>
-                    </div>
-                    <span style="color: #ff7700; font-weight: bold;">View &rarr;</span>
+                const div = document.createElement('div');
+                div.className = `server-item ${index === activeServerIndex ? 'active' : ''}`;
+                div.onclick = () => openServerView(index);
+                
+                div.innerHTML = `
+                    <h4>${srv.name}</h4>
+                    <p>${srv.status}</p>
                 `;
-                item.onclick = () => openServerDetail(index);
-                listEl.appendChild(item);
+                sidebarList.appendChild(div);
             });
         }
-
-        async function createServerCode() {
-            const serverNameInput = document.getElementById('serverNameInput');
-            const errorEl = document.getElementById('createError');
-            const btn = document.getElementById('createBtn');
-            const serverName = serverNameInput.value.trim();
-
-            errorEl.textContent = '';
-            if (!serverName) {
-                errorEl.textContent = "Please enter a server name.";
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerHTML = `<span class="spinner"></span> Generating...`;
-
-            try {
-                const response = await fetch(PIPEDREAM_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'create_link', serverName: serverName })
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    const newServer = {
-                        serverName: data.serverName,
-                        code: data.code,
-                        createdAt: new Date().toISOString()
-                    };
-                    servers.push(newServer);
-                    saveServers();
-                    serverNameInput.value = '';
-                    openServerDetail(servers.length - 1);
-                } else {
-                    errorEl.textContent = data.message || "Failed to generate code.";
-                }
-            } catch (err) {
-                errorEl.textContent = "Network error. Please try again.";
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = "Generate Code";
-            }
-        }
-
-        function openServerDetail(index) {
-            currentServerId = index;
-            const srv = servers[index];
-            document.getElementById('detailServerName').textContent = srv.serverName;
-            document.getElementById('detailCode').textContent = srv.code;
-            document.getElementById('detailCommand').textContent = `/server-link ${srv.code}`;
-            switchView('detail-view');
-        }
-
-        async function generateNewCodeForCurrent() {
-            if (currentServerId === null) return;
-            const srv = servers[currentServerId];
-            
-            try {
-                const response = await fetch(PIPEDREAM_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'create_link', serverName: srv.serverName })
-                });
-
-                const data = await response.json();
-                if (data.success) {
-                    servers[currentServerId].code = data.code;
-                    saveServers();
-                    openServerDetail(currentServerId);
-                }
-            } catch (err) {
-                alert("Failed to generate a new code. Check your network.");
-            }
-        }
-
-        function escapeHtml(text) {
-            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
-            return text.replace(/[&<>"']/g, m => map[m]);
-        }
-
-        // Initial render on load
-        renderServerList();
     </script>
 </body>
 </html>
