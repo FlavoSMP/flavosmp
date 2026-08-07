@@ -3,89 +3,405 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlavoSMP - Server Linker</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>FlavoSMP Linker</title>
+    <style>
+        :root {
+            --bg-color: #0d0b0b;
+            --card-bg: rgba(20, 15, 15, 0.85);
+            --border-fire: rgba(255, 69, 0, 0.4);
+            --fire-gradient: linear-gradient(135deg, #ff2a00, #ff7700, #ffb700);
+            --text-main: #ffffff;
+            --text-sub: #b0a8a8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 50% 10%, rgba(255, 69, 0, 0.15), transparent 60%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: var(--fire-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 119, 0, 0.4);
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: var(--text-sub);
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-fire);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 69, 0, 0.1);
+            margin-bottom: 25px;
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-sub);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(10, 8, 8, 0.8);
+            border: 2px solid rgba(255, 69, 0, 0.3);
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #ff7700;
+            box-shadow: 0 0 15px rgba(255, 119, 0, 0.4);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--fire-gradient);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(255, 69, 0, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(255, 119, 0, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid rgba(255, 119, 0, 0.5);
+            margin-top: 15px;
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 119, 0, 0.1);
+        }
+
+        /* Server List Grid */
+        .server-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .server-card {
+            background: rgba(30, 20, 20, 0.6);
+            border: 1px solid rgba(255, 69, 0, 0.3);
+            border-radius: 12px;
+            padding: 18px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .server-card:hover {
+            border-color: #ff7700;
+            transform: translateX(5px);
+            box-shadow: 0 0 15px rgba(255, 119, 0, 0.2);
+        }
+
+        .server-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+
+        .server-info span {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+        }
+
+        .code-display {
+            background: rgba(10, 8, 8, 0.9);
+            border: 2px dashed rgba(255, 119, 0, 0.5);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .code-box {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            color: #ffb700;
+            text-shadow: 0 0 15px rgba(255, 183, 0, 0.5);
+            margin-top: 10px;
+        }
+
+        .command-box {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            color: #ff7700;
+            margin: 15px 0;
+            font-size: 1.1rem;
+        }
+
+        .error-msg {
+            color: #ff4d4d;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s ease infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex items-center justify-center p-4">
-    <div class="max-w-md w-full bg-slate-800 p-8 rounded-2xl shadow-xl border border-slate-700">
-        <h1 class="text-2xl font-bold mb-2 text-center text-indigo-400">FlavoSMP Linker</h1>
-        <p class="text-slate-400 text-sm mb-6 text-center">Link your Minecraft server to your Discord community.</p>
+<body>
 
-        <div id="create-section">
-            <div class="mb-4">
-                <label class="block text-sm font-medium mb-2" for="serverName">Minecraft Server Name</label>
-                <input type="text" id="serverName" placeholder="e.g. MyAwesomeSMP" 
-                    class="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg focus:outline-none focus:border-indigo-500">
+    <div class="container">
+        <header>
+            <h1>FlavoSMP Linker</h1>
+            <p>Link your Minecraft server to your Discord community.</p>
+        </header>
+
+        <div id="home-view" class="view active">
+            <div class="card">
+                <h2 style="margin-bottom: 20px; font-size: 1.5rem;">Your Connected Servers</h2>
+                <div id="server-list" class="server-grid">
+                    </div>
+                <div id="no-servers" style="text-align: center; color: var(--text-sub); padding: 20px 0; display: none;">
+                    No servers registered yet. Click below to add one!
+                </div>
+                <button class="btn" onclick="switchView('create-view')">+ Add New Server</button>
             </div>
-            <button onclick="createLink()" 
-                class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 rounded-lg transition">
-                Generate Link Code
-            </button>
         </div>
 
-        <div id="result-section" class="hidden text-center mt-4">
-            <div class="bg-slate-900 p-4 rounded-lg border border-slate-700 mb-4">
-                <p class="text-xs text-slate-400 uppercase tracking-wider mb-1">Your Link Code</p>
-                <span id="displayCode" class="text-3xl font-mono font-bold text-emerald-400 tracking-widest">-----</span>
+        <div id="create-view" class="view">
+            <div class="card">
+                <h2 style="margin-bottom: 20px; font-size: 1.5rem;">Register New Server</h2>
+                <div class="form-group">
+                    <label for="serverNameInput">Server Name</label>
+                    <input type="text" id="serverNameInput" placeholder="e.g. Flavo SMP #2">
+                </div>
+                <button class="btn" id="createBtn" onclick="createServerCode()">Generate Code</button>
+                <button class="btn btn-secondary" onclick="switchView('home-view')">Back to Dashboard</button>
+                <div id="createError" class="error-msg"></div>
             </div>
-            <p class="text-xs text-slate-300 mb-4">
-                Go to your Discord server and type:<br>
-                <code class="bg-slate-900 px-2 py-1 rounded text-indigo-300 font-mono">/server-link <span class="code-span">CODE</span></code>
-            </p>
-            <button onclick="resetForm()" class="text-sm text-slate-400 hover:text-white underline">Create another code</button>
         </div>
 
-        <div id="loading" class="hidden text-center py-4 text-indigo-400">Processing...</div>
-        <div id="errorMsg" class="hidden text-center mt-4 text-sm text-red-400"></div>
+        <div id="detail-view" class="view">
+            <div class="card" style="text-align: center;">
+                <h2 id="detailServerName" style="font-size: 1.8rem; margin-bottom: 10px;">Server Name</h2>
+                <p style="color: var(--text-sub);">Use this code to connect your server via Discord.</p>
+                
+                <div class="code-display">
+                    <span style="font-size: 0.9rem; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px;">Link Code</span>
+                    <div id="detailCode" class="code-box">-----</div>
+                </div>
+
+                <p style="margin-top: 20px;">Go to your Discord server and type:</p>
+                <div id="detailCommand" class="command-box">/server-link -----</div>
+
+                <button class="btn" onclick="generateNewCodeForCurrent()" style="margin-top: 15px;">Generate New Code</button>
+                <button class="btn btn-secondary" onclick="switchView('home-view')">Back to Dashboard</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        const WEBHOOK_URL = "https://eoed3phjmlklizm.m.pipedream.net"; // <-- Paste your Pipedream webhook URL here
+        const PIPEDREAM_URL = "https://eoed3phjmlklizm.m.pipedream.net/";
+        let servers = JSON.parse(localStorage.getItem('flavo_servers') || '[]');
+        let currentServerId = null;
 
-        async function createLink() {
-            const serverName = document.getElementById('serverName').value.trim();
-            const errorMsg = document.getElementById('errorMsg');
-            const loading = document.getElementById('loading');
-            
-            errorMsg.classList.add('hidden');
+        function saveServers() {
+            localStorage.setItem('flavo_servers', JSON.stringify(servers));
+        }
+
+        function switchView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            if(viewId === 'home-view') {
+                renderServerList();
+            }
+        }
+
+        function renderServerList() {
+            const listEl = document.getElementById('server-list');
+            const noServersEl = document.getElementById('no-servers');
+            listEl.innerHTML = '';
+
+            if (servers.length === 0) {
+                noServersEl.style.display = 'block';
+                return;
+            }
+            noServersEl.style.display = 'none';
+
+            servers.forEach((srv, index) => {
+                const item = document.createElement('div');
+                item.className = 'server-card';
+                item.innerHTML = `
+                    <div class="server-info">
+                        <h3>${escapeHtml(srv.serverName)}</h3>
+                        <span>Code: <strong>${srv.code}</strong></span>
+                    </div>
+                    <span style="color: #ff7700; font-weight: bold;">View &rarr;</span>
+                `;
+                item.onclick = () => openServerDetail(index);
+                listEl.appendChild(item);
+            });
+        }
+
+        async function createServerCode() {
+            const serverNameInput = document.getElementById('serverNameInput');
+            const errorEl = document.getElementById('createError');
+            const btn = document.getElementById('createBtn');
+            const serverName = serverNameInput.value.trim();
+
+            errorEl.textContent = '';
             if (!serverName) {
-                errorMsg.textContent = "Please enter a server name.";
-                errorMsg.classList.remove('hidden');
+                errorEl.textContent = "Please enter a server name.";
                 return;
             }
 
-            loading.classList.remove('hidden');
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner"></span> Generating...`;
 
             try {
-                const response = await fetch(WEBHOOK_URL, {
+                const response = await fetch(PIPEDREAM_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'create_link', serverName })
+                    body: JSON.stringify({ action: 'create_link', serverName: serverName })
                 });
+
                 const data = await response.json();
-                loading.classList.add('hidden');
 
                 if (data.success) {
-                    document.getElementById('create-section').classList.add('hidden');
-                    document.getElementById('displayCode').textContent = data.code;
-                    document.querySelectorAll('.code-span').forEach(el => el.textContent = data.code);
-                    document.getElementById('result-section').classList.remove('hidden');
+                    const newServer = {
+                        serverName: data.serverName,
+                        code: data.code,
+                        createdAt: new Date().toISOString()
+                    };
+                    servers.push(newServer);
+                    saveServers();
+                    serverNameInput.value = '';
+                    openServerDetail(servers.length - 1);
                 } else {
-                    errorMsg.textContent = data.message || "Failed to generate code.";
-                    errorMsg.classList.remove('hidden');
+                    errorEl.textContent = data.message || "Failed to generate code.";
                 }
             } catch (err) {
-                loading.classList.add('hidden');
-                errorMsg.textContent = "Network error. Check your webhook URL.";
-                errorMsg.classList.remove('hidden');
+                errorEl.textContent = "Network error. Please try again.";
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = "Generate Code";
             }
         }
 
-        function resetForm() {
-            document.getElementById('serverName').value = '';
-            document.getElementById('result-section').classList.add('hidden');
-            document.getElementById('create-section').classList.remove('hidden');
+        function openServerDetail(index) {
+            currentServerId = index;
+            const srv = servers[index];
+            document.getElementById('detailServerName').textContent = srv.serverName;
+            document.getElementById('detailCode').textContent = srv.code;
+            document.getElementById('detailCommand').textContent = `/server-link ${srv.code}`;
+            switchView('detail-view');
         }
+
+        async function generateNewCodeForCurrent() {
+            if (currentServerId === null) return;
+            const srv = servers[currentServerId];
+            
+            try {
+                const response = await fetch(PIPEDREAM_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'create_link', serverName: srv.serverName })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    servers[currentServerId].code = data.code;
+                    saveServers();
+                    openServerDetail(currentServerId);
+                }
+            } catch (err) {
+                alert("Failed to generate a new code. Check your network.");
+            }
+        }
+
+        function escapeHtml(text) {
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Initial render on load
+        renderServerList();
     </script>
 </body>
 </html>
