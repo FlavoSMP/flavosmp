@@ -13,8 +13,10 @@
         .main-content { flex: 1; padding: 50px; overflow-y: auto; display: flex; justify-content: center; align-items: center; }
         .sidebar-header { padding: 30px 20px; border-bottom: 1px solid var(--border-glow); text-align: center; }
         .sidebar-header h2 { background: linear-gradient(90deg, var(--fire-main), var(--fire-yellow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.8rem; }
-        .new-link-btn { display: block; width: calc(100% - 40px); margin: 20px auto; padding: 12px; background: transparent; border: 2px dashed var(--fire-light); color: var(--fire-light); border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .new-link-btn { display: block; width: calc(100% - 40px); margin: 20px auto 10px auto; padding: 12px; background: transparent; border: 2px dashed var(--fire-light); color: var(--fire-light); border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .new-link-btn:hover { background: rgba(255, 140, 0, 0.1); }
+        .owner-btn { display: block; width: calc(100% - 40px); margin: 0 auto 20px auto; padding: 12px; background: transparent; border: 2px dashed #ff4500; color: #ff4500; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .owner-btn:hover { background: rgba(255, 69, 0, 0.1); }
         .server-list { flex: 1; overflow-y: auto; padding: 10px; }
         .server-item { padding: 15px 20px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.03); border-radius: 8px; cursor: pointer; border-left: 3px solid transparent; transition: 0.2s; }
         .server-item:hover, .server-item.active { background: rgba(255, 69, 0, 0.1); border-left: 3px solid var(--fire-main); }
@@ -38,6 +40,7 @@
     <div class="sidebar">
         <div class="sidebar-header"><h2>FlavoSMP</h2></div>
         <button class="new-link-btn" onclick="openCreatorView()">+ CREATE NEW LINK</button>
+        <button class="owner-btn" onclick="openOwnerPanel()">+ OWNER PANEL</button>
         <div class="server-list" id="sidebar-list">
             <div class="empty-state" id="empty-state">No servers linked yet.</div>
         </div>
@@ -83,6 +86,21 @@
     </div>
 
     <script>
+        // ==========================================
+        // OWNER PANEL CONFIGURATION
+        // ==========================================
+        const OWNER_SECRET_CODE = "Z4EX1H4CWTwTP5Up9ypjoHhnx"; // Put your 25-letter code here
+
+        function openOwnerPanel() {
+            const enteredCode = prompt("Enter your 25-letter owner access code:");
+            if (enteredCode === OWNER_SECRET_CODE) {
+                alert("🔓 Access Granted! Welcome to the Owner Panel.");
+                // Put your owner panel UI/logic here
+            } else if (enteredCode !== null) {
+                alert("❌ Incorrect access code!");
+            }
+        }
+
         let servers = JSON.parse(localStorage.getItem('flavo_servers') || '[]');
         let activeServerIndex = null;
         let checkInterval = null;
@@ -153,7 +171,6 @@
             finally { btn.disabled = false; }
         }
 
-        // --- Rest of your standard logic ---
         async function checkServerStatus(index) {
             if (activeServerIndex !== index) return;
             const srv = servers[index];
